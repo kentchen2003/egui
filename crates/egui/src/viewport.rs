@@ -1075,6 +1075,8 @@ pub enum ViewportCommand {
     ///
     /// This is equivalent to the system keyboard shortcut for paste (e.g. CTRL + V).
     RequestPaste,
+
+    SetUndecoratedShadow(bool),
 }
 
 impl ViewportCommand {

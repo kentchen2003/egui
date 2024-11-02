@@ -1528,6 +1528,20 @@ fn process_viewport_command(
         ViewportCommand::RequestPaste => {
             actions_requested.insert(ActionRequested::Paste);
         }
+        ViewportCommand::SetUndecoratedShadow(shadow) => {
+            #[cfg(target_os = "windows")]
+            {
+                use winit::platform::windows::WindowExtWindows;
+                window.set_undecorated_shadow(shadow);
+            }
+            #[cfg(not(target_os = "windows"))]
+            {
+                log::warn!(
+                    "Non Windows platform not support SetUndecoratedShadow {}!",
+                    shadow
+                );
+            }
+        }
     }
 }
 

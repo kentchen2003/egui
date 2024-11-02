@@ -122,7 +122,7 @@ impl FontImpl {
 
         // Round to an even number of physical pixels to get even kerning.
         // See https://github.com/emilk/egui/issues/382
-        let scale_in_pixels = scale_in_pixels.round() as u32;
+        //let scale_in_pixels = scale_in_pixels.round() as u32;
 
         // Round to closest pixel:
         let y_offset_in_points = (y_offset_points * pixels_per_point).round() / pixels_per_point;
@@ -241,7 +241,7 @@ impl FontImpl {
     }
 
     #[inline]
-    pub fn pair_kerning(&self, _last_glyph_id: swash::GlyphId, _glyph_id: swash::GlyphId) -> f32 {
+    pub fn pair_kerning(_last_glyph_id: swash::GlyphId, _glyph_id: swash::GlyphId) -> f32 {
         0.0
     }
 

@@ -5,7 +5,7 @@ use emath::{pos2, vec2, Align, NumExt, Pos2, Rect, Vec2};
 
 use crate::{stroke::PathStroke, text::font::Font, Color32, Mesh, Stroke, Vertex};
 
-use super::{FontsImpl, Galley, Glyph, LayoutJob, LayoutSection, Row, RowVisuals};
+use super::{font::FontImpl, FontsImpl, Galley, Glyph, LayoutJob, LayoutSection, Row, RowVisuals};
 
 // ----------------------------------------------------------------------------
 
@@ -161,9 +161,9 @@ fn layout_section(
             paragraph.empty_paragraph_height = line_height; // TODO(emilk): replace this hack with actually including `\n` in the glyphs?
         } else {
             let (font_impl, glyph_info) = font.font_impl_and_glyph_info(chr);
-            if let Some(font_impl) = font_impl {
+            if let Some(_font_impl) = font_impl {
                 if let Some(last_glyph_id) = last_glyph_id {
-                    paragraph.cursor_x += font_impl.pair_kerning(last_glyph_id, glyph_info.id);
+                    paragraph.cursor_x += FontImpl::pair_kerning(last_glyph_id, glyph_info.id);
                     paragraph.cursor_x += extra_letter_spacing;
                 }
             }
@@ -387,8 +387,8 @@ fn replace_last_glyph_with_overflow_character(
         {
             // Kerning:
             x += section.format.extra_letter_spacing;
-            if let Some(font_impl) = font_impl {
-                x += font_impl.pair_kerning(last_glyph_info.id, replacement_glyph_info.id);
+            if let Some(_font_impl) = font_impl {
+                x += FontImpl::pair_kerning(last_glyph_info.id, replacement_glyph_info.id);
             }
         }
 
@@ -457,8 +457,8 @@ fn replace_last_glyph_with_overflow_character(
             // Undo kerning with previous glyph:
             let (font_impl, glyph_info) = font.font_impl_and_glyph_info(last_glyph.chr);
             last_glyph.pos.x -= extra_letter_spacing;
-            if let Some(font_impl) = font_impl {
-                last_glyph.pos.x -= font_impl.pair_kerning(prev_glyph_id, glyph_info.id);
+            if let Some(_font_impl) = font_impl {
+                last_glyph.pos.x -= FontImpl::pair_kerning(prev_glyph_id, glyph_info.id);
             }
 
             // Replace the glyph:
@@ -471,8 +471,8 @@ fn replace_last_glyph_with_overflow_character(
 
             // Reapply kerning:
             last_glyph.pos.x += extra_letter_spacing;
-            if let Some(font_impl) = font_impl {
-                last_glyph.pos.x += font_impl.pair_kerning(prev_glyph_id, glyph_info.id);
+            if let Some(_font_impl) = font_impl {
+                last_glyph.pos.x += FontImpl::pair_kerning(prev_glyph_id, glyph_info.id);
             }
 
             // Check if we're within width budget:
