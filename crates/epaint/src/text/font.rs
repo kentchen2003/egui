@@ -72,8 +72,7 @@ pub struct FontImpl {
     units_per_em: u16,
     // metrics: swash::Metrics,
     /// Maximum character height
-    scale_in_pixels: u32,
-
+    //scale_in_pixels: u32,
     height_in_points: f32,
 
     // move each character by this much (hack)
@@ -133,7 +132,7 @@ impl FontImpl {
             swash_font,
             scale,
             units_per_em: metrics.units_per_em,
-            scale_in_pixels,
+            //scale_in_pixels,
             height_in_points: ascent - descent + line_gap,
             y_offset_in_points,
             ascent: ascent + baseline_offset,
