@@ -218,7 +218,11 @@ impl Painter {
         if let Some(window) = window {
             let size = window.inner_size();
             if !self.surfaces.contains_key(&viewport_id) {
+                #[cfg(target_os = "macos")]
                 let mut surface = self.instance.create_surface(window)?;
+
+                #[cfg(target_os = "windows")]
+                let surface = self.instance.create_surface(window)?;
 
                 #[cfg(target_os = "macos")]
                 #[allow(invalid_reference_casting)]
