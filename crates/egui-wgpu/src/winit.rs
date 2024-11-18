@@ -218,7 +218,21 @@ impl Painter {
         if let Some(window) = window {
             let size = window.inner_size();
             if !self.surfaces.contains_key(&viewport_id) {
-                let surface = self.instance.create_surface(window)?;
+                let mut surface = self.instance.create_surface(window)?;
+
+                #[cfg(target_os = "macos")]
+                #[allow(invalid_reference_casting)]
+                unsafe {
+                    surface.as_hal::<wgpu::hal::metal::Api, _, ()>(|surface| {
+                        if let Some(surface_ref) = surface {
+                            // AHH! Converting '&' to '&mut'
+                            let surface_mut = &mut *(surface_ref as *const wgpu::hal::metal::Surface
+                                as *mut wgpu::hal::metal::Surface);
+                            surface_mut.present_with_transaction = true;
+                        }
+                    });
+                }
+
                 self.add_surface(surface, viewport_id, size).await?;
             }
         } else {
@@ -244,10 +258,24 @@ impl Painter {
         if let Some(window) = window {
             let size = window.inner_size();
             if !self.surfaces.contains_key(&viewport_id) {
-                let surface = unsafe {
+                let mut surface = unsafe {
                     self.instance
                         .create_surface_unsafe(wgpu::SurfaceTargetUnsafe::from_window(&window)?)?
                 };
+
+                #[cfg(target_os = "macos")]
+                #[allow(invalid_reference_casting)]
+                unsafe {
+                    surface.as_hal::<wgpu::hal::metal::Api, _, ()>(|surface| {
+                        if let Some(surface_ref) = surface {
+                            // AHH! Converting '&' to '&mut'
+                            let surface_mut = &mut *(surface_ref as *const wgpu::hal::metal::Surface
+                                as *mut wgpu::hal::metal::Surface);
+                            surface_mut.present_with_transaction = true;
+                        }
+                    });
+                }
+
                 self.add_surface(surface, viewport_id, size).await?;
             }
         } else {
